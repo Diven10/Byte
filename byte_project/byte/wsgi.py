@@ -10,10 +10,10 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 import os
 import sys
 
-# Add byte_project to the Python path
+# Add byte_project to the Python path at the highest priority
 path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if path not in sys.path:
-    sys.path.append(path)
+    sys.path.insert(0, path)
 
 from django.core.wsgi import get_wsgi_application
 

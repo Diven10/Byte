@@ -11,7 +11,7 @@ venv/
 ENV/
 
 # Database
-db.sqlite3
+# (Committing database so Vercel can read it)
 
 # Media
 media/
