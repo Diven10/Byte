@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="feed-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+    <h1 style="font-size: 24px; font-weight: 800; margin-bottom: 4px;">🔥 Trending Recipes</h1>
+    <p style="color: var(--text-secondary); font-size: 14px;">Most liked recipes in the last 7 days</p>
+</div>
+
+<div class="feed-posts" style="padding-top: 16px;">
+    {% if page_obj.object_list %}
+        {% for recipe in page_obj %}
+            {% include 'includes/recipe_card.html' %}
+        {% endfor %}
+        {% include 'includes/pagination.html' %}
+    {% else %}
+        <div style="padding: 40px 20px; text-align: center; color: var(--text-secondary);">
+            <h3 style="color: var(--text-primary); font-size: 20px; font-weight: 800; margin-bottom: 8px;">No trending recipes</h3>
+            <p>Check back later for popular content.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

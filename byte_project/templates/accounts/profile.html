@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile_user.first_name|default:profile_user.username }} - Byte{% endblock %}
+{% block nav_profile %}active{% endblock %}
+
+{% block content %}
+<!-- Profile Header (Sticky or fixed if desired, matching feed-header style) -->
+<div class="feed-header" style="justify-content: flex-start; padding: 0 20px;">
+    <!-- Back Button -->
+    <a href="javascript:history.back()" style="margin-right: 20px; color: var(--color-text-main);">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+    </a>
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+        <h2 style="font-size: 18px; font-weight: 700; color: var(--color-text-main); margin: 0; line-height: 1.2;">
+            {{ profile_user.first_name|default:profile_user.username }}
+        </h2>
+        <span style="font-size: 13px; color: var(--color-text-light);">Private or Public</span>
+    </div>
+</div>
+
+<div class="profile-scrollable" style="overflow-y: auto;">
+    <!-- Banner -->
+    <div style="width: 100%; height: 200px; background-color: #eee2cc; position: relative;">
+        <!-- Overlapping Avatar -->
+        <img src="{{ profile_user.profile.get_profile_picture_url }}" alt="avatar" style="width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--color-bg-main); background-color: #ccc; position: absolute; bottom: -65px; left: 30px; object-fit: cover;">
+        
+        <!-- Edit Profile Button -->
+        {% if is_own_profile %}
+        <a href="{% url 'accounts:edit_profile' %}" style="position: absolute; bottom: -50px; right: 20px; padding: 8px 16px; border: 1px solid var(--color-border); border-radius: 20px; text-decoration: none; color: var(--color-text-main); font-weight: 700; font-size: 14px;">Edit Profile</a>
+        {% else %}
+        <!-- Follow/Unfollow button could go here -->
+        {% endif %}
+    </div>
+
+    <!-- Profile Info -->
+    <div style="padding: 75px 30px 20px 30px;">
+        <h1 style="font-size: 22px; font-weight: 700; color: var(--color-text-main); margin: 0;">{{ profile_user.first_name|default:profile_user.username }}</h1>
+        <p style="font-size: 14px; color: var(--color-text-light); margin-top: 2px;">@{{ profile_user.username }}</p>
+        
+        <!-- Bio Box -->
+        <div style="margin-top: 20px; background-color: #eee2cc; border-radius: 20px 20px 0 0; padding: 20px; min-height: 100px;">
+            <p style="color: var(--color-text-main); font-size: 16px;">{{ profile_user.profile.bio|default:"bio...." }}</p>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="explore-tabs" style="background-color: #eee2cc; margin-top: -20px; border-bottom: 1px solid var(--color-border);">
+        <a href="?tab=posts" class="explore-tab" {% if tab == 'posts' or not tab %}style="text-decoration: underline; text-underline-offset: 8px;"{% endif %}>Posts</a>
+        <a href="?tab=liked" class="explore-tab" {% if tab == 'liked' %}style="text-decoration: underline; text-underline-offset: 8px;"{% endif %}>Liked</a>
+        <a href="?tab=commented" class="explore-tab" {% if tab == 'commented' %}style="text-decoration: underline; text-underline-offset: 8px;"{% endif %}>Commented</a>
+        <a href="?tab=reposts" class="explore-tab" {% if tab == 'reposts' %}style="text-decoration: underline; text-underline-offset: 8px;"{% endif %}>Reposts</a>
+    </div>
+
+    <!-- Feed -->
+    <div class="feed-posts" style="padding: 20px 0;">
+        {% if recipes %}
+            {% for recipe in recipes %}
+            <div class="post">
+                <div class="post-header" style="padding: 0 20px;">
+                    <img src="{{ recipe.author.profile.get_profile_picture_url }}" alt="avatar" class="avatar">
+                    <span class="post-author">{{ recipe.author.first_name|default:recipe.author.username }}</span>
+                </div>
+                
+                <a href="{% url 'recipes:detail' pk=recipe.pk %}" style="text-decoration: none; color: inherit; display: block;">
+                    <div class="post-body" style="padding: 0 20px;">
+                        {% if recipe.cover_image %}
+                        <div class="post-image-placeholder" style="background-image: url('{{ recipe.cover_image.url }}');"></div>
+                        {% else %}
+                        <div class="post-image-placeholder"></div>
+                        {% endif %}
+                        
+                        <h3 class="post-title">{{ recipe.title }}</h3>
+                        {% if recipe.short_description %}
+                        <p style="color: var(--color-text-light); font-size: 14px; margin-top: 5px;">{{ recipe.short_description|truncatewords:20 }}</p>
+                        {% endif %}
+                    </div>
+                </a>
+                
+                <div class="post-actions" style="padding-right: 20px;">
+                    <div class="action-left">
+                        <button class="icon-btn" onclick="window.location.href='{% url 'recipes:detail' pk=recipe.pk %}#comments'" title="Comment">
+                            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        </button>
+                        <button class="icon-btn {% if recipe.is_liked %}filled{% endif %}" title="Like">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </button>
+                        <button class="icon-btn" title="Share">
+                            <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                        </button>
+                    </div>
+                    <div class="action-right">
+                        <button class="icon-btn" title="React">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </button>
+                        <button class="icon-btn {% if recipe.is_bookmarked %}filled{% endif %}" title="Save">
+                            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if page_obj.has_other_pages %}
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                {% if page_obj.has_previous %}
+                <a href="?tab={{ tab }}&page={{ page_obj.previous_page_number }}" style="text-decoration: none; color: var(--color-text-main); font-weight: bold;">&laquo; Previous</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                <a href="?tab={{ tab }}&page={{ page_obj.next_page_number }}" style="text-decoration: none; color: var(--color-text-main); font-weight: bold;">Next &raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% else %}
+            <div style="text-align: center; margin-top: 50px; color: var(--color-text-light);">
+                <h3>No recipes found</h3>
+                <p>There are no posts to display in this tab.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings - Byte{% endblock %}
+{% block nav_settings %}active{% endblock %}
+
+{% block content %}
+<div style="padding: 20px 30px;">
+    <!-- Header -->
+    <h1 style="font-size: 22px; font-weight: 700; color: var(--color-text-main); margin-bottom: 20px;">Settings</h1>
+    
+    <!-- Search Bar -->
+    <div style="margin-bottom: 30px;">
+        <div style="position: relative; max-width: 400px;">
+            <div style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--color-text-light);">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+            <input type="text" placeholder="Search Settings" style="width: 100%; padding: 12px 15px 12px 45px; border: 1px solid var(--color-border); border-radius: 25px; font-family: inherit; font-size: 15px; font-weight: 600; color: var(--color-text-main); background-color: transparent; outline: none; box-sizing: border-box;">
+        </div>
+    </div>
+    
+    <!-- Settings Menu -->
+    <div style="display: flex; flex-direction: column; border-top: 1px solid var(--color-border); margin-left: -30px; margin-right: -30px;">
+        
+        <a href="{% url 'accounts:edit_profile' %}" class="settings-link active" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 30px; text-decoration: none; color: var(--color-text-main); font-weight: 700; font-size: 16px; border-bottom: 1px solid var(--color-border); background-color: #eee2cc;">
+            <span>Your Account</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-light);">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </a>
+        
+        <a href="{% url 'accounts:password_change' %}" class="settings-link" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 30px; text-decoration: none; color: var(--color-text-main); font-weight: 700; font-size: 16px; border-bottom: 1px solid var(--color-border);">
+            <span>Privacy And Security</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-light);">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </a>
+        
+        <a href="{% url 'accounts:accessibility' %}" class="settings-link" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 30px; text-decoration: none; color: var(--color-text-main); font-weight: 700; font-size: 16px; border-bottom: 1px solid var(--color-border);">
+            <span>Accessibility, Display, Language</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-light);">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </a>
+        
+        <a href="mailto:devenpvmagar@gmail.com" class="settings-link" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 30px; text-decoration: none; color: var(--color-text-main); font-weight: 700; font-size: 16px; border-bottom: 1px solid var(--color-border);">
+            <span>Help Center</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-light);">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </a>
+        
+        <a href="{% url 'accounts:logout' %}" class="settings-link" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 30px; text-decoration: none; color: #d9534f; font-weight: 700; font-size: 16px; border-bottom: 1px solid var(--color-border);">
+            <span>Log out</span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+        </a>
+
+    </div>
+</div>
+
+<style>
+    .settings-link:hover {
+        background-color: #f7efe1;
+    }
+    .settings-link.active:hover {
+        background-color: #eee2cc;
+    }
+</style>
+{% endblock %}

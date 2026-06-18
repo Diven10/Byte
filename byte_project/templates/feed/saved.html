@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Saved Recipes - Byte{% endblock %}
+{% block nav_saved %}active{% endblock %}
+
+{% block content %}
+<div class="feed-header" style="justify-content: flex-start; padding-left: 20px;">
+    <h1 style="font-size: 20px; font-weight: 700; color: var(--color-text-main); line-height: 70px;">Saved Recipes</h1>
+</div>
+
+<div class="feed-scrollable">
+    {% if recipes %}
+        {% for recipe in recipes %}
+        <div class="post">
+            <div class="post-header">
+                <img src="{{ recipe.author.profile.get_profile_picture_url }}" alt="avatar" class="avatar">
+                <span class="post-author">{{ recipe.author.first_name|default:recipe.author.username }}</span>
+            </div>
+            
+            <a href="{% url 'recipes:detail' pk=recipe.pk %}" style="text-decoration: none; color: inherit; display: block;">
+                <div class="post-body">
+                    {% if recipe.cover_image %}
+                    <div class="post-image-placeholder" style="background-image: url('{{ recipe.cover_image.url }}');"></div>
+                    {% else %}
+                    <div class="post-image-placeholder"></div>
+                    {% endif %}
+                    
+                    <h3 class="post-title">{{ recipe.title }}</h3>
+                    {% if recipe.short_description %}
+                    <p style="color: var(--color-text-light); font-size: 14px; margin-top: 5px;">{{ recipe.short_description|truncatewords:20 }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            
+            <div class="post-actions">
+                <div class="action-left">
+                    <!-- Comment -->
+                    <button class="icon-btn" onclick="window.location.href='{% url 'recipes:detail' pk=recipe.pk %}#comments'" title="Comment">
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    </button>
+                    <!-- Like/Pretzel -->
+                    <button class="icon-btn {% if recipe.is_liked %}filled{% endif %}" title="Like">
+                        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    </button>
+                    <!-- Share -->
+                    <button class="icon-btn" title="Share">
+                        <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                    </button>
+                </div>
+                <div class="action-right">
+                    <!-- Pretzel Extra -->
+                    <button class="icon-btn" title="React">
+                        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    </button>
+                    <!-- Download / Save -->
+                    <button class="icon-btn filled" title="Save">
+                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <!-- Pagination if any -->
+        {% if page_obj.has_other_pages %}
+        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" style="text-decoration: none; color: var(--color-text-main); font-weight: bold;">&laquo; Previous</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" style="text-decoration: none; color: var(--color-text-main); font-weight: bold;">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <div style="text-align: center; margin-top: 50px; color: var(--color-text-light);">
+            <h3>No saved recipes yet</h3>
+            <p>Recipes you save will appear here.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

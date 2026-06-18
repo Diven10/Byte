@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="feed-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+    <h1 style="font-size: 24px; font-weight: 800; margin-bottom: 4px;">Edit Profile</h1>
+</div>
+
+<div style="padding: 20px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">Profile Picture</label>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <img src="{{ user.profile.get_profile_picture_url }}" alt="Current Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                {{ form.profile_picture }}
+            </div>
+            {% if form.profile_picture.errors %}
+                <div style="color: red; font-size: 13px; margin-top: 4px;">{{ form.profile_picture.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div style="color: red; font-size: 13px; margin-top: 4px;">{{ form.first_name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div style="color: red; font-size: 13px; margin-top: 4px;">{{ form.last_name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">Bio</label>
+            {{ form.bio }}
+            {% if form.bio.errors %}
+                <div style="color: red; font-size: 13px; margin-top: 4px;">{{ form.bio.errors }}</div>
+            {% endif %}
+            <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Tell us about your cooking style.</p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="{% url 'accounts:password_change' %}" style="color: var(--accent-primary); text-decoration: none; font-weight: 600; font-size: 15px;">Change Password</a>
+            <button type="submit" class="btn-primary" style="padding: 10px 24px; border-radius: var(--radius-full); font-weight: 700; font-size: 15px; border: none; background: var(--accent-primary); color: #fff; cursor: pointer;">Save Changes</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

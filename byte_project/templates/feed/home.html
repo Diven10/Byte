@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - Byte{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+<div class="feed-header">
+    <a href="?tab=foryou" class="feed-tab {% if tab == 'foryou' or not tab %}active{% endif %}" style="{% if tab == 'foryou' or not tab %}background-color: #fafafa;{% endif %}">For You</a>
+    <a href="?tab=following" class="feed-tab {% if tab == 'following' %}active{% endif %}" style="{% if tab == 'following' %}background-color: #fafafa;{% endif %}">Following</a>
+</div>
+
+<div class="feed-scrollable">
+    {% if recipes %}
+        {% for recipe in recipes %}
+        <div class="post">
+            <div class="post-header">
+                <img src="{{ recipe.author.profile.get_profile_picture_url }}" alt="avatar" class="avatar">
+                <span class="post-author">{{ recipe.author.first_name|default:recipe.author.username }}</span>
+            </div>
+            
+            <a href="{% url 'recipes:detail' pk=recipe.pk %}" style="text-decoration: none; color: inherit; display: block;">
+                <div class="post-body">
+                    {% if recipe.cover_image %}
+                    <div class="post-image-placeholder" style="background-image: url('{{ recipe.cover_image.url }}');"></div>
+                    {% else %}
+                    <div class="post-image-placeholder"></div>
+                    {% endif %}
+                    
+                    <h3 class="post-title">{{ recipe.title }}</h3>
+                    {% if recipe.short_description %}
+                    <p style="color: var(--color-text-light); font-size: 14px; margin-top: 5px;">{{ recipe.short_description|truncatewords:20 }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            
+            <div class="post-actions">
+                <div class="action-left">
+                    <!-- Comment -->
+                    <button class="icon-btn" onclick="window.location.href='{% url 'recipes:detail' pk=recipe.pk %}#comments'" title="Comment">
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    </button>
+                    <!-- Like/Pretzel -->
+                    <button class="icon-btn {% if recipe.is_liked %}filled{% endif %}" title="Like">
+                        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    </button>
+                    <!-- Share -->
+                    <button class="icon-btn" title="Share">
+                        <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                    </button>
+                </div>
+                <div class="action-right">
+                    <!-- Pretzel Extra -->
+                    <button class="icon-btn" title="React">
+                        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    </button>
+                    <!-- Download / Save -->
+                    <button class="icon-btn {% if recipe.is_bookmarked %}filled{% endif %}" title="Save">
+                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; margin-top: 50px; color: var(--color-text-light);">
+            <h3>No recipes yet</h3>
+            <p>Be the first to share a delicious recipe!</p>
+            <a href="{% url 'recipes:create' %}" style="display: inline-block; margin-top: 15px; padding: 10px 20px; background-color: var(--color-text-main); color: white; text-decoration: none; border-radius: 5px;">Post a Recipe</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="feed-header">
+    <div class="header-top" style="display: flex; align-items: center; gap: 24px; padding: 4px 16px; height: 53px;">
+        <a href="javascript:history.back()" class="back-btn" style="width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--text-primary); text-decoration: none;">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" width="20" height="20"><path d="M7.414 13l5.043 5.04-1.414 1.42L3.586 12l7.457-7.46 1.414 1.42L7.414 11H21v2H7.414z"></path></svg>
+        </a>
+        <div style="display: flex; flex-direction: column;">
+            <h2 style="font-size: 20px; font-weight: 800; line-height: 1.2;">{{ profile_user.first_name|default:profile_user.username }}</h2>
+            <span style="font-size: 13px; color: var(--text-secondary);">{{ profile_user.profile.recipes_count }} Posts</span>
+        </div>
+    </div>
+</div>
+
+<div class="profile-banner" style="height: 200px; background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-color) 100%);"></div>
+
+<div class="profile-info" style="padding: 12px 16px; position: relative;">
+    <div class="profile-actions" style="display: flex; justify-content: flex-end; align-items: flex-start; margin-bottom: 16px;">
+        <div style="position: absolute; top: -70px; left: 16px; border: 4px solid var(--bg-primary); border-radius: 50%; overflow: hidden; width: 140px; height: 140px; background-color: var(--bg-primary);">
+            <img src="{{ profile_user.profile.get_profile_picture_url }}" alt="Avatar" class="profile-avatar" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        
+        {% if is_own_profile %}
+            <a href="{% url 'accounts:edit_profile' %}" class="btn-secondary" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; text-decoration: none;">Edit profile</a>
+        {% elif user.is_authenticated %}
+            <button class="btn-follow {% if is_following %}following{% endif %}" data-user-id="{{ profile_user.pk }}" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; font-size: 15px; border: 1px solid var(--accent-primary); background: {% if is_following %}var(--accent-primary){% else %}transparent{% endif %}; color: {% if is_following %}#fff{% else %}var(--accent-primary){% endif %}; cursor: pointer;">
+                {% if is_following %}Following{% else %}Follow{% endif %}
+            </button>
+        {% endif %}
+    </div>
+    
+    <div class="profile-details">
+        <h1 class="profile-name" style="font-size: 20px; font-weight: 800; line-height: 1.2;">{{ profile_user.first_name|default:profile_user.username }}</h1>
+        <span class="profile-handle" style="font-size: 15px; color: var(--text-secondary);">@{{ profile_user.username }}</span>
+        
+        {% if profile_user.profile.bio %}
+        <div class="profile-bio" style="font-size: 15px; margin-top: 12px; white-space: pre-line;">
+            {{ profile_user.profile.bio }}
+        </div>
+        {% endif %}
+        
+        <div class="profile-meta" style="display: flex; align-items: center; gap: 4px; color: var(--text-secondary); font-size: 15px; margin-top: 12px;">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M7 4V3h2v1h6V3h2v1h1.5C19.89 4 21 5.12 21 6.5v12c0 1.38-1.11 2.5-2.5 2.5h-13C4.12 21 3 19.88 3 18.5v-12C3 5.12 4.12 4 5.5 4H7zm0 2H5.5c-.27 0-.5.22-.5.5v12c0 .28.23.5.5.5h13c.28 0 .5-.22.5-.5v-12c0-.28-.22-.5-.5-.5H17v1h-2V6H9v1H7V6zm0 6h2v-2H7v2zm0 4h2v-2H7v2zm4-4h2v-2h-2v2zm0 4h2v-2h-2v2zm4-4h2v-2h-2v2z"></path></svg>
+            Joined {{ profile_user.date_joined|date:"F Y" }}
+        </div>
+        
+        <div class="profile-stats" style="display: flex; gap: 20px; margin-top: 12px;">
+            <a href="{% url 'accounts:following' username=profile_user.username %}" style="text-decoration: none; color: var(--text-secondary); font-size: 15px;">
+                <strong style="color: var(--text-primary);">{{ profile_user.profile.following_count }}</strong> Following
+            </a>
+            <a href="{% url 'accounts:followers' username=profile_user.username %}" style="text-decoration: none; color: var(--text-secondary); font-size: 15px;">
+                <strong style="color: var(--text-primary);"><span class="followers-count-display">{{ profile_user.profile.followers_count }}</span></strong> Followers
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="feed-tabs" style="display: flex; justify-content: space-around; border-bottom: 1px solid var(--border-color); margin-top: 16px;">
+    <div class="tab active" style="padding: 16px 0; border-bottom: 3px solid var(--accent-primary); color: var(--text-primary); font-weight: 700;"><span>Posts</span></div>
+    <div class="tab" style="padding: 16px 0; color: var(--text-secondary); font-weight: 500; cursor: pointer;"><span>Likes</span></div>
+</div>
+
+<div class="feed-posts" style="padding-top: 16px;">
+    {% if page_obj.object_list %}
+        {% for recipe in page_obj %}
+            {% include 'includes/recipe_card.html' %}
+        {% endfor %}
+        {% include 'includes/pagination.html' %}
+    {% else %}
+        <div style="padding: 40px 20px; text-align: center; color: var(--text-secondary);">
+            <h3 style="color: var(--text-primary); font-size: 32px; font-weight: 800; margin-bottom: 8px;">No posts yet</h3>
+            <p>When {{ profile_user.first_name|default:"this user" }} posts recipes, they will show up here.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

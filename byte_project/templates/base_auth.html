@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Byte{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #1a1a2e;
+            font-family: 'Inter', sans-serif;
+            color: #3d2c1e;
+        }
+        .auth-wrapper {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+        }
+        .auth-container {
+            background-color: #fdf6e3;
+            width: 100%;
+            padding: 48px 40px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .auth-logo {
+            font-family: 'Great Vibes', cursive;
+            font-size: 56px;
+            color: #8B6914;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+        .auth-container h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 28px;
+            color: #3d2c1e;
+        }
+        .auth-form {
+            width: 100%;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #5a4a3a;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d4c5a9;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            background-color: #fff;
+            color: #3d2c1e;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #8B6914;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #5a4a3a;
+        }
+        .form-check input[type="checkbox"] {
+            accent-color: #8B6914;
+        }
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background-color: #8B6914;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 20px;
+        }
+        .btn-auth:hover {
+            background-color: #7a5c12;
+        }
+        .auth-links {
+            font-size: 14px;
+            color: #5a4a3a;
+        }
+        .auth-links a {
+            color: #8B6914;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .form-errors {
+            background-color: #fde8e8;
+            border: 1px solid #f5c6c6;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            text-align: left;
+            width: 100%;
+        }
+        .form-errors ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .form-errors li {
+            font-size: 13px;
+            color: #c0392b;
+            margin-bottom: 4px;
+        }
+        .field-error {
+            font-size: 12px;
+            color: #c0392b;
+            margin-top: 4px;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            color: #9a8a78;
+            font-size: 13px;
+            margin: 20px 0;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #d4c5a9;
+        }
+        .divider::before { margin-right: 12px; }
+        .divider::after { margin-left: 12px; }
+    </style>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <a href="{% url 'feed:home' %}" class="auth-logo">Byte</a>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>

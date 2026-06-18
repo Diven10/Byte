@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}Edit Recipe{% else %}Create Recipe{% endif %} - Byte{% endblock %}
+
+{% block content %}
+<div class="feed-header">
+    <div class="header-top">
+        <a href="javascript:history.back()" class="back-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M7.414 13l5.043 5.04-1.414 1.42L3.586 12l7.457-7.46 1.414 1.42L7.414 11H21v2H7.414z"></path></svg>
+        </a>
+        <h2>{% if form.instance.pk %}Edit Recipe{% else %}Create Recipe{% endif %}</h2>
+    </div>
+</div>
+
+<div class="form-page">
+    {% if form.non_field_errors %}
+    <div class="form-errors">
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="recipe-form">
+        {% csrf_token %}
+
+        <!-- Title -->
+        <div class="form-group">
+            <label for="id_title">Recipe Title</label>
+            <input type="text" name="title" id="id_title" value="{{ form.title.value|default:'' }}" placeholder="Give your recipe a name" required>
+            {% if form.title.errors %}
+                {% for error in form.title.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Cover Image -->
+        <div class="form-group">
+            <label for="id_cover_image">Cover Image</label>
+            {% if form.instance.cover_image %}
+            <div class="current-image-preview">
+                <img src="{{ form.instance.cover_image.url }}" alt="Current cover">
+                <span class="current-image-label">Current image</span>
+            </div>
+            {% endif %}
+            <input type="file" name="cover_image" id="id_cover_image" accept="image/*" class="file-input">
+            <div class="image-preview" id="imagePreview" style="display: none;">
+                <img id="previewImg" src="" alt="Preview">
+            </div>
+            {% if form.cover_image.errors %}
+                {% for error in form.cover_image.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Short Description -->
+        <div class="form-group">
+            <label for="id_short_description">Short Description</label>
+            <textarea name="short_description" id="id_short_description" rows="3" placeholder="Briefly describe your recipe...">{{ form.short_description.value|default:'' }}</textarea>
+            {% if form.short_description.errors %}
+                {% for error in form.short_description.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Ingredients -->
+        <div class="form-group">
+            <label for="id_ingredients">Ingredients</label>
+            <textarea name="ingredients" id="id_ingredients" rows="6" placeholder="Enter one ingredient per line&#10;e.g.&#10;2 cups flour&#10;1 tsp salt&#10;3 eggs">{{ form.ingredients.value|default:'' }}</textarea>
+            {% if form.ingredients.errors %}
+                {% for error in form.ingredients.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Instructions -->
+        <div class="form-group">
+            <label for="id_instructions">Instructions</label>
+            <textarea name="instructions" id="id_instructions" rows="8" placeholder="Write your cooking steps...">{{ form.instructions.value|default:'' }}</textarea>
+            {% if form.instructions.errors %}
+                {% for error in form.instructions.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Cooking Time & Servings (Side by Side) -->
+        <div class="form-row">
+            <div class="form-group form-group-half">
+                <label for="id_cooking_time">Cooking Time (minutes)</label>
+                <input type="number" name="cooking_time" id="id_cooking_time" value="{{ form.cooking_time.value|default:'' }}" placeholder="30" min="1">
+                {% if form.cooking_time.errors %}
+                    {% for error in form.cooking_time.errors %}
+                    <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group form-group-half">
+                <label for="id_servings">Servings</label>
+                <input type="number" name="servings" id="id_servings" value="{{ form.servings.value|default:'' }}" placeholder="4" min="1">
+                {% if form.servings.errors %}
+                    {% for error in form.servings.errors %}
+                    <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+            <label for="id_category">Category</label>
+            <select name="category" id="id_category">
+                <option value="">Select a category</option>
+                {% for choice in form.category.field.queryset %}
+                <option value="{{ choice.pk }}" {% if form.category.value|stringformat:"s" == choice.pk|stringformat:"s" %}selected{% endif %}>{{ choice.name }}</option>
+                {% endfor %}
+            </select>
+            {% if form.category.errors %}
+                {% for error in form.category.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Hashtags -->
+        <div class="form-group">
+            <label for="id_hashtags_text">Hashtags</label>
+            <input type="text" name="hashtags_text" id="id_hashtags_text" value="{{ form.hashtags_text.value|default:'' }}" placeholder="#vegan #healthy #quickmeals">
+            {% if form.hashtags_text.errors %}
+                {% for error in form.hashtags_text.errors %}
+                <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn-submit">
+            {% if form.instance.pk %}Save Changes{% else %}Post Recipe{% endif %}
+        </button>
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+    // Image preview
+    document.getElementById('id_cover_image').addEventListener('change', function(e) {
+        const preview = document.getElementById('imagePreview');
+        const img = document.getElementById('previewImg');
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                img.src = ev.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

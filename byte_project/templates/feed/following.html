@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="feed-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <a href="javascript:history.back()" style="color: var(--text-primary); text-decoration: none;">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" width="20" height="20"><path d="M7.414 13l5.043 5.04-1.414 1.42L3.586 12l7.457-7.46 1.414 1.42L7.414 11H21v2H7.414z"></path></svg>
+        </a>
+        <div>
+            <h1 style="font-size: 20px; font-weight: 800; margin-bottom: 2px;">{{ profile_user.first_name|default:profile_user.username }}</h1>
+            <p style="color: var(--text-secondary); font-size: 13px;">@{{ profile_user.username }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="feed-tabs" style="display: flex; justify-content: space-around; border-bottom: 1px solid var(--border-color);">
+    <a href="{% url 'accounts:followers' username=profile_user.username %}" class="tab" style="text-decoration: none; padding: 16px 0; color: var(--text-secondary); font-weight: 500; flex: 1; text-align: center;">Followers</a>
+    <a href="{% url 'accounts:following' username=profile_user.username %}" class="tab active" style="text-decoration: none; padding: 16px 0; border-bottom: 3px solid var(--accent-primary); color: var(--text-primary); font-weight: 700; flex: 1; text-align: center;">Following</a>
+</div>
+
+<div style="padding: 16px;">
+    {% if users %}
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            {% for u in users %}
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                    <a href="{% url 'accounts:profile' username=u.username %}" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+                        <img src="{{ u.profile.get_profile_picture_url }}" alt="{{ u.username }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-primary);">{{ u.first_name|default:u.username }}</div>
+                            <div style="font-size: 13px; color: var(--text-secondary);">@{{ u.username }}</div>
+                            {% if u.profile.bio %}
+                                <div style="font-size: 13px; color: var(--text-primary); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">{{ u.profile.bio }}</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% if user.is_authenticated and user != u %}
+                        <button class="btn-follow {% if u.pk in following_ids %}following{% endif %}" data-user-id="{{ u.pk }}" style="padding: 6px 16px; border-radius: var(--radius-full); font-weight: 600; font-size: 13px; border: 1px solid var(--accent-primary); background: {% if u.pk in following_ids %}var(--accent-primary){% else %}transparent{% endif %}; color: {% if u.pk in following_ids %}#fff{% else %}var(--accent-primary){% endif %}; cursor: pointer;">
+                            {% if u.pk in following_ids %}Following{% else %}Follow{% endif %}
+                        </button>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 40px 0; color: var(--text-secondary);">
+            <h3 style="color: var(--text-primary); font-size: 20px; font-weight: 800; margin-bottom: 8px;">Not following anyone yet</h3>
+            <p>When this account follows someone, they'll show up here.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

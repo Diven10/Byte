@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accessibility, Display, Language - Byte{% endblock %}
+{% block nav_settings %}active{% endblock %}
+
+{% block content %}
+<div class="feed-header" style="justify-content: flex-start; padding: 0 20px;">
+    <a href="javascript:history.back()" style="margin-right: 20px; color: var(--color-text-main);">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+    </a>
+    <h2 style="font-size: 20px; font-weight: 700; color: var(--color-text-main); margin: 0; line-height: 70px;">
+        Accessibility, Display, Language
+    </h2>
+</div>
+
+<div style="padding: 20px 30px; max-width: 600px;">
+    
+    <!-- Display Section -->
+    <div style="margin-bottom: 40px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: var(--color-text-main); margin-bottom: 15px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px;">Display</h3>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0;">
+            <div>
+                <span style="display: block; font-weight: 600; color: var(--color-text-main); font-size: 16px;">Dark Mode</span>
+                <span style="display: block; font-size: 14px; color: var(--color-text-light); margin-top: 4px;">Adjust the appearance of Byte to reduce glare.</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-dark-mode">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0;">
+            <div>
+                <span style="display: block; font-weight: 600; color: var(--color-text-main); font-size: 16px;">High Contrast</span>
+                <span style="display: block; font-size: 14px; color: var(--color-text-light); margin-top: 4px;">Increase contrast for better readability.</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-high-contrast">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+    
+    <!-- Language Section -->
+    <div style="margin-bottom: 40px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: var(--color-text-main); margin-bottom: 15px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px;">Language</h3>
+        
+        <div style="padding: 15px 0;">
+            <label for="language-select" style="display: block; font-weight: 600; color: var(--color-text-main); margin-bottom: 8px;">Display Language</label>
+            <select id="language-select" style="width: 100%; padding: 12px 15px; border: 1px solid var(--color-border); border-radius: 8px; font-family: inherit; font-size: 15px; background-color: var(--color-bg-main); color: var(--color-text-main); box-sizing: border-box; cursor: pointer; outline: none;">
+                <option value="en" selected>English (US)</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="ja">日本語 (Japanese)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Accessibility Section -->
+    <div style="margin-bottom: 40px;">
+        <h3 style="font-size: 18px; font-weight: 700; color: var(--color-text-main); margin-bottom: 15px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px;">Accessibility</h3>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0;">
+            <div>
+                <span style="display: block; font-weight: 600; color: var(--color-text-main); font-size: 16px;">Reduce Motion</span>
+                <span style="display: block; font-size: 14px; color: var(--color-text-light); margin-top: 4px;">Limit animations and auto-playing videos.</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-reduce-motion">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <div style="padding: 15px 0;">
+            <label style="display: block; font-weight: 600; color: var(--color-text-main); margin-bottom: 8px;">Text Size</label>
+            <input type="range" id="text-size-slider" min="1" max="5" value="3" style="width: 100%; cursor: pointer;">
+            <div style="display: flex; justify-content: space-between; color: var(--color-text-light); font-size: 12px; margin-top: 8px;">
+                <span>Aa (Small)</span>
+                <span>Default</span>
+                <span>Aa (Large)</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Basic Switch Styles for mockups -->
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: var(--color-text-main);
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--color-text-main);
+}
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Select elements
+    const darkModeToggle = document.getElementById('toggle-dark-mode');
+    const highContrastToggle = document.getElementById('toggle-high-contrast');
+    const reduceMotionToggle = document.getElementById('toggle-reduce-motion');
+    const textSizeSlider = document.getElementById('text-size-slider');
+
+    // Initialize UI from localStorage
+    if (localStorage.getItem('byte-dark-mode') === '1') {
+        darkModeToggle.checked = true;
+    }
+    if (localStorage.getItem('byte-high-contrast') === '1') {
+        highContrastToggle.checked = true;
+    }
+    if (localStorage.getItem('byte-reduce-motion') === '1') {
+        reduceMotionToggle.checked = true;
+    }
+    const storedTextSize = localStorage.getItem('byte-text-size') || '3';
+    textSizeSlider.value = storedTextSize;
+
+    // Listeners to update localStorage and trigger global apply logic
+    darkModeToggle.addEventListener('change', function() {
+        localStorage.setItem('byte-dark-mode', this.checked ? '1' : '0');
+        document.documentElement.classList.toggle('dark-mode', this.checked);
+    });
+
+    highContrastToggle.addEventListener('change', function() {
+        localStorage.setItem('byte-high-contrast', this.checked ? '1' : '0');
+        document.documentElement.classList.toggle('high-contrast', this.checked);
+    });
+
+    reduceMotionToggle.addEventListener('change', function() {
+        localStorage.setItem('byte-reduce-motion', this.checked ? '1' : '0');
+        document.documentElement.classList.toggle('reduce-motion', this.checked);
+    });
+
+    textSizeSlider.addEventListener('input', function() {
+        localStorage.setItem('byte-text-size', this.value);
+        // Remove all previous text-size classes
+        for (let i = 1; i <= 5; i++) {
+            document.documentElement.classList.remove('text-size-' + i);
+        }
+        document.documentElement.classList.add('text-size-' + this.value);
+    });
+});
+</script>
+{% endblock %}

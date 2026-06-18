@@ -1,0 +1,19 @@
+{% if page_obj.has_other_pages %}
+<div class="pagination" style="display: flex; justify-content: center; align-items: center; padding: 20px 0; gap: 16px;">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.tab %}&tab={{ request.GET.tab }}{% endif %}" class="btn-secondary" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 600; text-decoration: none; border: 1px solid var(--accent-primary); color: var(--accent-primary);">Previous</a>
+    {% else %}
+        <span style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 600; border: 1px solid var(--border-color); color: var(--text-muted); cursor: not-allowed;">Previous</span>
+    {% endif %}
+
+    <span style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.tab %}&tab={{ request.GET.tab }}{% endif %}" class="btn-secondary" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 600; text-decoration: none; border: 1px solid var(--accent-primary); color: var(--accent-primary);">Next</a>
+    {% else %}
+        <span style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 600; border: 1px solid var(--border-color); color: var(--text-muted); cursor: not-allowed;">Next</span>
+    {% endif %}
+</div>
+{% endif %}
