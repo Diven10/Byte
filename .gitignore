@@ -17,7 +17,7 @@ db.sqlite3
 media/
 
 # Static files
-staticfiles/
+# (Committing static files for Vercel deployment)
 
 # IDEs
 .idea/
