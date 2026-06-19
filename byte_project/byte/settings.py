@@ -76,6 +76,7 @@ WSGI_APPLICATION = 'byte.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import os
 import dj_database_url
 
 DATABASES = {
@@ -85,10 +86,10 @@ DATABASES = {
     }
 }
 
-# If DATABASE_URL is set in the environment (e.g., on Vercel), use it
-db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=False)
-if db_from_env:
-    DATABASES['default'].update(db_from_env)
+# Safely parse DATABASE_URL, stripping any accidental quotes
+database_url = os.environ.get('DATABASE_URL', '').strip('"\'')
+if database_url:
+    DATABASES['default'].update(dj_database_url.parse(database_url, conn_max_age=600, ssl_require=False))
 
 
 # Password validation
